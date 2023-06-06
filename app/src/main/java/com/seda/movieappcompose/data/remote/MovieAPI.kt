@@ -12,10 +12,10 @@ interface MovieAPI {
     @GET("?apikey=fbdd89ef")
     suspend fun getFilm(
         @Query("s") search:String
-    ): Response<MoviesDto>
+    ): MoviesDto
 
     @GET("?apikey=fbdd89ef")
     suspend fun getMovie(
         @Query("i") movieId: String,
-    ): Response<MoviesDetailDto>
+    ): MoviesDetailDto
 }
