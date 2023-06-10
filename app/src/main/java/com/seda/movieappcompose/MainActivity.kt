@@ -10,7 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.seda.movieappcompose.presentation.movie_detail.views.MovieDetailScreen
+import com.seda.movieappcompose.presentation.movie_list.views.MovieScreen
 import com.seda.movieappcompose.presentation.ui.theme.MovieAppComposeTheme
+import com.seda.movieappcompose.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,25 +32,29 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+SayfaGecisleri()
                 }
             }
         }
     }
 }
-
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun SayfaGecisleri(){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "movie_screen"){
+        composable("movie_screen"){
+           MovieScreen(navController = navController)
+        }
+        composable("movie_detail_screen"+ "/{${Constants.IMDB_ID}}")
+           {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieAppComposeTheme {
-        Greeting("Android")
+            MovieDetailScreen(navController = navController)
+        }
+
+
     }
+
+
+
 }
+

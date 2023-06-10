@@ -15,41 +15,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
-    private val getMovieUseCase: GetMovieUseCase
+    private val getMoviesUseCase: GetMovieUseCase
     ) : ViewModel() {
 
-    private val _state = mutableStateOf(MoviesState())
+    private val _state = mutableStateOf<MoviesState>(MoviesState())
     val state : State<MoviesState> =_state
-    private var job: Job?=null
+    private var job: Job? = null
 
      init {
-       getMovies(_state.value.search)
+         _state.value.search?.let { getMovies(it) }
      }
 
-    private fun getMovies(search:String){
+    private fun getMovies(search: String) {
         job?.cancel()
-        getMovieUseCase.executeGetMovies(search).onEach {
-       when(it){
-           is Resource.Success->{
-               _state.value= MoviesState(movies = it.data?: emptyList())
-           }
-           is Resource.Error->{
-               _state.value = MoviesState(error = it.message?:"Error")
-           }
-           is Resource.Loading->{
-               _state.value =MoviesState(isLoading = true)
-           }
+        job = getMoviesUseCase.executeGetMovies(search).onEach {
+            when (it) {
+                is Resource.Success -> {
+                    _state.value = MoviesState(movies = it.data ?: emptyList())
+                }
 
-       }
+                is Resource.Error -> {
+                    _state.value = MoviesState(error = it.message ?: "Error!")
+                }
+
+                is Resource.Loading -> {
+                    _state.value = MoviesState(isLoading = true)
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
-fun onEvent(event:MoviesEvent){
-    when(event){
-        is MoviesEvent.Search->{
-            getMovies(event.searchString)
+    fun onEvent(event : MoviesEvent) {
+        when(event) {
+            is MoviesEvent.Search -> {
+                getMovies(event.searchString)
+            }
         }
     }
-}
+
 
 }
