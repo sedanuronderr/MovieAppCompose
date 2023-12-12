@@ -1,6 +1,6 @@
 # MovieAppCompose
 Movie App with Clean Architecture + Flow + Compose (Kotlin Android)
-
+ 
 <table>
 
 <tr>
